@@ -18,7 +18,9 @@ const RecordView = (props) => {
 
   return (
     <div>
-      {record.size && <Play url={record.src}></Play>}
+      {record.size && (
+        <Play url={record.src} record={"record_" + props.record}></Play>
+      )}
 
       {!record.size && (
         <Record record={props.record} onStopped={changeHandler} />

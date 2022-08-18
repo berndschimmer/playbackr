@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { IoPlay } from "react-icons/io5";
 import { IoPause } from "react-icons/io5";
+import { IoTrashSharp } from "react-icons/io5";
+import "./Delete.css";
 
-const useAudio = (url) => {
+const useAudio = (url, record) => {
   const [audio] = useState(new Audio(url));
   const [playing, setPlaying] = useState(false);
 
@@ -21,15 +23,22 @@ const useAudio = (url) => {
 
   return [playing, toggle];
 };
+// onclick function for delete props (record) from above
+// localStorage.delete(record)?
 
 const Player = ({ url }) => {
   const [playing, toggle] = useAudio(url);
 
   return (
     <div>
-      <button className="button" onClick={toggle}>
-        {playing ? <IoPause /> : <IoPlay />}
-      </button>
+      <div>
+        <button className="button" onClick={toggle}>
+          {playing ? <IoPause /> : <IoPlay />}
+        </button>
+      </div>
+      <div className="delete">
+        <IoTrashSharp />
+      </div>
     </div>
   );
 };

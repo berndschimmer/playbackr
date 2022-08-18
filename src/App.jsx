@@ -1,18 +1,33 @@
-import RecordView from "./Audio";
+import Audio from "./Audio";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { IoSettingsSharp } from "react-icons/io5";
+import Settings from "./Settings";
 import "./App.css";
 
 const App = () => {
-  // const redordings = [1, 2, 3, 4, 5, 6];
+  const redordings = [1, 2, 3, 4, 5, 6];
   return (
-    <div className="App">
-      <RecordView key="1" record="1"></RecordView>
-      <RecordView key="2" record="2"></RecordView>
-      <RecordView key="3" record="3"></RecordView>
-      <RecordView key="4" record="4"></RecordView>
-      {/* {recordings.map((key, i) => {
-        <RecordView key={key} record={"test" + i}></RecordView>;
-      })} */}
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/settings" element={<Settings />}></Route>
+
+          <Route
+            path="/"
+            element={
+              <div>
+                {redordings.map((key) => (
+                  <Audio key={key} record={key}></Audio>
+                ))}
+                <Link to="/settings">
+                  <IoSettingsSharp className="settings" />
+                </Link>
+              </div>
+            }
+          ></Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 };
 
