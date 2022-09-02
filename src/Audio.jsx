@@ -15,11 +15,18 @@ const RecordView = (props) => {
   const changeHandler = (freshRecorded) => {
     setRecord(freshRecorded);
   };
+  const deleteHandler = () => {
+    setRecord([]);
+  };
 
   return (
     <div>
       {record.size && (
-        <Play url={record.src} record={"record_" + props.record}></Play>
+        <Play
+          url={record.src}
+          record={"record_" + props.record}
+          onDelete={deleteHandler}
+        ></Play>
       )}
 
       {!record.size && (

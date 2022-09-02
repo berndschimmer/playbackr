@@ -1,4 +1,10 @@
-.delete svg {
-  padding: 5px 15px;
+.delete {
+  border: none;
   cursor: pointer;
+  font-weight: bold;
+  color: black;
+  background-color: white;
+  display: flex;
+align-items: center;
+justify-content: center;
 }
