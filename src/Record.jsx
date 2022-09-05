@@ -1,40 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
+import { useCountdownTimer } from "use-countdown-timer";
 
 import { IoMic } from "react-icons/io5";
 
 const Record = ({ record, onStopped }) => {
-  const [second, setSecond] = useState("00");
-  const [minute, setMinute] = useState("00");
-  const [isActive, setIsActive] = useState(false);
-  const [counter, setCounter] = useState(0);
+  const [timer] = useState(3000);
 
-  useEffect(() => {
-    let intervalId;
+  const { countdown, start, pause, isRunning } = useCountdownTimer({
+    timer,
+    onExpire: () => {
+      pauseRecording();
+      stopRecording();
+    },
+  });
 
-    if (isActive) {
-      intervalId = setInterval(() => {
-        const secondCounter = counter % 60;
-        const minuteCounter = Math.floor(counter / 60);
-
-        let computedSecond =
-          String(secondCounter).length === 1
-            ? `0${secondCounter}`
-            : secondCounter;
-        let computedMinute =
-          String(minuteCounter).length === 1
-            ? `0${minuteCounter}`
-            : minuteCounter;
-
-        setSecond(computedSecond);
-        setMinute(computedMinute);
-
-        setCounter((counter) => counter + 1);
-      }, 1000);
-    }
-
-    return () => clearInterval(intervalId);
-  }, [isActive, counter]);
   const {
     status,
     startRecording,
@@ -60,31 +40,28 @@ const Record = ({ record, onStopped }) => {
       });
     },
   });
+
   return (
     <div className="record">
       <div>
+        <button onClick={start}></button>
         <button
           className={"button button-" + status}
           onClick={() => {
-            if (!isActive) {
+            if (!isRunning) {
               startRecording();
+              start();
             } else {
+              pause();
               pauseRecording();
               stopRecording();
-              setSecond("00");
-              setMinute("00");
             }
-            setIsActive(!isActive);
           }}
         >
           <IoMic />
         </button>
       </div>
-      <div>
-        <span className="minute">{minute}</span>
-        <span>:</span>
-        <span className="second">{second}</span>
-      </div>
+      <div>{countdown / 1000}</div>
     </div>
   );
 };
