@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { useCountdownTimer } from "use-countdown-timer";
 
@@ -44,7 +44,6 @@ const Record = ({ record, onStopped }) => {
   return (
     <div className="record">
       <div>
-        <button onClick={start}></button>
         <button
           className={"button button-" + status}
           onClick={() => {
