@@ -1,36 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoPlay } from "react-icons/io5";
 import { IoPause } from "react-icons/io5";
 import { IoTrashSharp } from "react-icons/io5";
 import "./Delete.css";
 
-const useAudio = (url, record, onDelete) => {
-  const [audio] = useState(new Audio(url));
+const useAudio = (blob) => {
+  const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
 
-  const toggle = () => setPlaying(!playing);
-
-  const deleteRecording = () => {
-    localStorage.removeItem(record);
-    onDelete();
-  };
+  const toggle = () => setPlaying((current) => !current);
 
   useEffect(() => {
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    const onEnded = () => setPlaying(false);
+
+    audioRef.current = audio;
+    audio.addEventListener("ended", onEnded);
+
+    return () => {
+      audio.removeEventListener("ended", onEnded);
+      audio.pause();
+      URL.revokeObjectURL(url);
+      audioRef.current = null;
+    };
+  }, [blob]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) {
+      return;
+    }
+
     playing ? audio.play() : audio.pause();
   }, [playing]);
 
-  useEffect(() => {
-    audio.addEventListener("ended", () => setPlaying(false));
-    return () => {
-      audio.removeEventListener("ended", () => setPlaying(false));
-    };
-  }, []);
-
-  return [playing, toggle, deleteRecording];
+  return [playing, toggle];
 };
 
-const Player = ({ url, record, onDelete }) => {
-  const [playing, toggle, deleteRecording] = useAudio(url, record, onDelete);
+const Player = ({ blob, onDelete }) => {
+  const [playing, toggle] = useAudio(blob);
 
   return (
     <div>
@@ -40,7 +49,7 @@ const Player = ({ url, record, onDelete }) => {
         </button>
       </div>
       <div className="delete">
-        <button className="delete" onClick={deleteRecording}>
+        <button className="delete" onClick={onDelete}>
           <IoTrashSharp />
         </button>
       </div>

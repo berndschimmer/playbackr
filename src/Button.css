@@ -11,3 +11,15 @@
   align-items: center;
   justify-content: center;
 }
+
+.recording-error {
+  color: #fff;
+  background-color: #5c1414;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  overflow-wrap: anywhere;
+  width: 100px;
+  padding: 0.25rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
