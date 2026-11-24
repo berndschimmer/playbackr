@@ -44,6 +44,8 @@ const RecorderProviderContent = ({ children }) => {
   } = useReactMediaRecorder({
     video: false,
     audio: { echoCancellation: false },
+    // Keep the MIME type reported by MediaRecorder (for example audio/mp4 in Safari).
+    blobPropertyBag: {},
     onStart: handleStart,
     onStop: handleStop,
   });
