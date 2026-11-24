@@ -1,5 +1,5 @@
 import Audio from "./Audio";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import { IoSettingsSharp } from "react-icons/io5";
 import Settings from "./Settings";
 import "./App.css";
@@ -7,7 +7,7 @@ import "./App.css";
 const App = () => {
   const redordings = [1, 2, 3, 4, 5, 6];
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="App">
         <Routes>
           <Route path="/settings" element={<Settings />}></Route>
@@ -27,7 +27,7 @@ const App = () => {
           ></Route>
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
