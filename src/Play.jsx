@@ -9,6 +9,18 @@ const useAudio = (blob) => {
   const [playing, setPlaying] = useState(false);
   const [playError, setPlayError] = useState("");
 
+  const describePlaybackError = (audio, error) => {
+    if (error?.name === "NotAllowedError") {
+      return "Der Browser hat die Wiedergabe blockiert. Bitte erneut versuchen.";
+    }
+
+    const mediaError = audio.error?.code;
+    const type = blob.type || "unbekannter MIME-Typ";
+    return `Aufnahme nicht abspielbar (${type}, ${blob.size} Bytes${
+      mediaError ? `, Medienfehler ${mediaError}` : ""
+    }).`;
+  };
+
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) {
@@ -19,11 +31,7 @@ const useAudio = (blob) => {
       setPlayError("");
       audio.play().catch((error) => {
         setPlaying(false);
-        setPlayError(
-          error.name === "NotAllowedError"
-            ? "Der Browser hat die Wiedergabe blockiert. Bitte erneut versuchen."
-            : "Die Aufnahme konnte nicht abgespielt werden."
-        );
+        setPlayError(describePlaybackError(audio, error));
       });
       return;
     }
@@ -39,16 +47,22 @@ const useAudio = (blob) => {
       setPlaying(true);
     };
     const onPause = () => setPlaying(false);
+    const onError = () => {
+      setPlaying(false);
+      setPlayError(describePlaybackError(audio));
+    };
 
     audioRef.current = audio;
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onPause);
+    audio.addEventListener("error", onError);
 
     return () => {
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
       audio.removeEventListener("ended", onPause);
+      audio.removeEventListener("error", onError);
       audio.pause();
       URL.revokeObjectURL(url);
       audioRef.current = null;

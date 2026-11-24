@@ -40,7 +40,6 @@ const RecorderProviderContent = ({ children }) => {
     status,
     startRecording,
     stopRecording,
-    pauseRecording,
   } = useReactMediaRecorder({
     video: false,
     audio: { echoCancellation: false },
@@ -69,10 +68,9 @@ const RecorderProviderContent = ({ children }) => {
         return;
       }
 
-      pauseRecording();
       stopRecording();
     },
-    [activeSlot, pauseRecording, stopRecording]
+    [activeSlot, stopRecording]
   );
 
   return (
